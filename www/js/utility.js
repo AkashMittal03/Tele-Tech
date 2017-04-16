@@ -82,10 +82,8 @@ function fetchFile()
 function selectFile()
 {
     var selectFile = document.getElementById("selectFile");
-selectFile.options[selectFile.options.selectedIndex].selected = true;
-var txt = $(this).val();
-    console.log(txt);
-//    $("#fileSubmitted").val($(this).val);
+    var selectedValue = selectFile.options[selectFile.selectedIndex].value;
+    $("#fileSubmitted").val(selectedValue);
 }
 
 // Return submitted file result
@@ -119,7 +117,7 @@ function processFile()
                                 var columnObject = dataObject[data];
                                 for (var columnIndex in columnObject) {
                                     if (columnObject.hasOwnProperty(columnIndex)) {
-                                        $('<th>'+columnObject[columnIndex]+'</th>').appendTo("#columnData")
+                                        $('<th>'+columnObject[columnIndex]+'</th>').appendTo("#columnData");
                                     }
                                 }
                             }

@@ -53,10 +53,30 @@
             </div>
             <br/><hr>
             <div>Please provide the value to fetch:</div>
-            <input type="text" name="columnSelected" id="columnSelected" value="IP Address" />
-            <input type="text" name="valueProvided" id="valueProvided" value="123.1.2.37" />
-            <input type="text" name="fileSubmitted" id="fileSubmitted"  />
-            <input type="submit" name="processFile" id="processFile" onClick="processFile()" />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>File Selected</th>
+                        <th>Choose column</th>
+                        <th>Enter the value of that column</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" name="fileSubmitted" id="fileSubmitted" value="Please first select the file." readonly="readonly"/>
+                        </td>
+                        <td>
+                            <input type="text" name="columnSelected" id="columnSelected" value="Please first select the file" readonly="readonly"/>
+                        </td>
+                        <td>
+                            <input type="text" name="valueProvided" id="valueProvided" value="123.1.2.37" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="submit" name="processFile" id="processFile" onClick="processFile()" class="btn btn-primary btn-md"/>
+            <div id="columnDetails" hidden></div>
             <hr>
             <table class="table table-striped">
                 <thead>
