@@ -23,7 +23,7 @@
                     }
             } else {
                     echo '<div class="alert alert-warning">
-                              <strong>Warning!</strong> Submitted file cannot be processed. Kindly, upload the file with extensions: <strong>.xlsx, .csv</strong></div>';
+                              <strong>Warning!</strong> Submitted file cannot be processed. Kindly, upload the file with extension: <strong>.xls, .xlsx, .csv</strong></div>';
             }
     }
 
@@ -35,34 +35,45 @@
             print_r(json_encode($fileArray));
     }
 
+    /**
+     * Below code is used to delete the submitted file
+     */
+    if (!empty($_POST['deleteFile'])) {
+        $fileSubmitted = $_POST['fileSubmitted'];
+        $filePath = $root."/UploadedFiles/".$fileSubmitted;
+        // Check if file exists
+        if (file_exists($filePath)) {
+            unlink($filePath);
+            echo true;
+        } else {
+            echo false;
+        }
+    }
+
     // Process file as per passed parameters
     if (!empty($_POST['processFile'])) {
-        require($root."/libraries/PHPExcel/excel_reader.php");
-        // Fetch input value passed
-        $fileName = $root."/UploadedFiles/".$_POST['fileSubmitted'];
-        $columnSelected = $_POST['columnSelected'];
-        $providedValue = $_POST['valueProvided'];
-        // Read files from directory
-        if (!file_exists($fileName)) {
-            echo '<div class="alert alert-warning">
-                    <strong>Warning!</strong> Please upload the file and try again.</div>';
-            exit;
+        // Fetching the table details
+        $table = new Table();
+        $tableData = $table->fetchTable();
+        $error = '';
+        $columns = '';
+        $matchedRow = array();
+        if (empty($tableData)) {
+            $error = '<div class="alert alert-warning">
+                <strong>Warning!</strong> Please select the file and try again.</div>';
         } else {
-            chmod($root, 777);
-            // Create Reader object
-            $excel = new PHPExcelReader();
-            $excel->setUTFEncoder('iconv');
-            $excel->setOutputEncoding('UTF-8');
-            $excel->read($fileName);
-            $table = $excel->sheets['0']['cells'];
-            $columns = $excel->sheets['0']['cells'][1];
-            $dataRows = array_slice($table, 1);
-            $columnIndex = 1;
-            $matchedRow = array();
+            $columnSelected = $_POST['columnSelected'];
+            $providedValue = $_POST['valueProvided'];
+            $columns = $tableData[0];
+            $dataRows = array_slice($tableData, 1);
+            $columnIndex = 0;
             foreach($columns as $column) {
+                $viewEntities = htmlentities($columnSelected, null, "UTF-8");
+                $replaceEntities = str_replace("&nbsp;", " ", $viewEntities);
+                $columnSelected = html_entity_decode($replaceEntities);
                 if (strtoupper($column) == strtoupper($columnSelected)) {
                     foreach($dataRows as $row) {
-                       if ($row[$columnIndex] == $providedValue) {
+                       if (strtoupper($row[$columnIndex]) == strtoupper($providedValue)) {
                             $matchedRow[] = $row;
                         }
                     }
@@ -73,7 +84,62 @@
                     break;
                 }
             }
-            $result = array("column"=> $columns, "rowDetails"=>$matchedRow);
+        }
+        $result = array("error"=> $error, "column"=> $columns, "rowDetails"=>$matchedRow);
+        print_r(json_encode($result));
+    }
+
+    /**
+     * Below code is use to fetch the column name present in file
+     */
+    if (!empty($_POST['fetchColumn'])) {
+        $result = array();
+        $columns = '';
+        $error = '';
+        $table = new Table();
+         $tableData = $table->fetchTable();
+            if (empty($tableData)) {
+                $error = '<div class="alert alert-warning">
+                    <strong>Warning!</strong> Please upload the file and try again.</div>';
+            } else {
+                $columns = $tableData[0];
+            }
+            $result["error"] = $error;
+            $result["column"] = $columns;
+
             print_r(json_encode($result));
+    }
+
+    /**
+     * Class used to get the details of excel file submitted
+     */
+    class Table
+    {
+        public function fetchTable()
+        {
+            $result = '';
+            $root = $_SERVER['DOCUMENT_ROOT'];
+            require($root."/libraries/Excel/Classes/PHPExcel.php");
+            // Fetch input value passed
+            $fileName = $root."/UploadedFiles/".$_POST['fileSubmitted'];
+            // Read files from directory
+            if (!file_exists($fileName)) {
+                return $result;
+            } else {
+                chmod($root, 777);
+                // Create Reader object
+                $inputFileType = PHPExcel_IOFactory::identify($fileName);
+                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($fileName);
+                $worksheet = $objPHPExcel->getSheet(0);
+                //Argument:
+                //null: for exception handling,
+                //true: formulas like AVG, SUM on sheet should be calculated while returning table
+                //true: format should be taken care i.e. 12.00 should be returned as 12.00 instead of 12
+                //false: formating table in to array. If true then fetching will be done as [1][A] instead of [1][1]
+                $table = $worksheet->toArray(null, true, true, false);
+
+                return $result = $table;
+            }
         }
     }

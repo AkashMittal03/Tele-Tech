@@ -6,39 +6,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>TeleTech Dashboard</title>
     </head>
-    <!-- Embeding Bootstrap CSS -->
+    <!-- Embedding Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <body>
         <div class="row" >
-            <div class="col-sm-4">
+            <div class="col-md-4">
                 <img src="http://www.teletech.com/sites/all/themes/main/img/logo-text.png" alt="TeleTech">
             </div>
-            <h2><div class="col-sm-8">Welcome to TeleTech Dashboard</div></h2>
+            <h2><div class="col-md-8">Welcome to TeleTech Dashboard</div></h2>
         </div>
         <hr>
         <div class="container-fluid">
             <div id="message"></div>
             <div class="row">
-                <div class="col-sm-4"  align="right"><h1><span class="label label-default">Upload File</span></h1></div>
-                <!-- Form to upload the file on server -->
-                <div class="col-sm-4">Please upload the file to process:
-                    &nbsp <br/>
-                    <form name="upload" enctype="multipart/form-data" method="POST">
-                        <input type="file" name="file" id="file" />
-                        &nbsp <br/>
-                        <input type="submit" class="btn btn-primary btn-md" name="Upload File" id="uploadFile"/>
-                    </form>
+                <div class="col-md-2"  align="right">
+                    <h1><span class="label label-default">Upload File</span></h1>
                 </div>
-            </div>
-            &nbsp <br/>
-            &nbsp <br/>
-            <div class="row">
-                <div class="col-sm-4"  align="right"><h1><span class="label label-default">Select File</span></h1></div>
-                <div class="col-sm-4">Please select the file from list to process:
+                <!-- Form to upload the file on server -->
+                <div class="col-md-2">Please upload the file to process:
+                <br/>
+                <form name="upload" enctype="multipart/form-data" method="POST">
+                    <input type="file" name="file" id="file" />
+                    &nbsp;<br/>
+                    <input type="submit" class="btn btn-primary btn-md" value="Upload" id="uploadFile"/>
+                </form>
+                </div>
+                <div class="col-md-2"  align="right"><h1><span class="label label-default">Select File</span></h1></div>
+                <div class="col-md-2">Please select the file from list to process:
                     &nbsp <br/>
                     <div>Search you file:</div>
-                    <input type="search" name="AvailableFilesSearch" id="searchFile" placeholder="Search you file"/>
+                    <input type="search" name="fileSearch" id="searchFile" placeholder="Search you file"/>
                     <input type="hidden" id="fileArray" name="fileArray" />
                     <div id="result" class="list-group"></div>
                     <div>OR</div><br/>
@@ -46,13 +44,23 @@
                     <div style="width: 200px; overflow: auto;">
                     <select id="selectFile" name="selectFile" >
                         <option id="select" >Select your file</option>
-                        <option id="optionCreated" hidden></option>
+                        <option id="optionCreated" hidden="true"></option>
                     </select>
                     </div>
                 </div>
+                <div class="col-md-2"  align="right"><h1><span class="label label-default">Delete File</span></h1></div>
+                <div class="col-md-2">Please select the file from list to delete:<br/>
+                    <select id="delFileCreator" name="delete" >
+                        <option id="select" >Select your file</option>
+                        <option id="optionCreated1" hidden="true"></option>
+                    </select>
+                    <br/><br/>
+                    <input type="submit" id="deleteFile" name="deleteFile" class="btn btn-primary btn-md" value="Delete" onClick="deleteFile()"/>
+                </div>
+                <div id="deleteFileName" hidden="true"></div>
             </div>
             <br/><hr>
-            <div>Please provide the value to fetch:</div>
+            <h3>Please provide the value to fetch data:</h3>
             <table class="table">
                 <thead>
                     <tr>
@@ -64,31 +72,33 @@
                 <tbody>
                     <tr>
                         <td>
-                            <input type="text" name="fileSubmitted" id="fileSubmitted" value="Please first select the file." readonly="readonly"/>
+                            <input type="text" name="fileSubmitted" id="fileSubmitted" value="Please select the file first" readonly="readonly"/>
+                        </td>
+                        <td style="overflow: auto">
+                            <select name="columnSelected" id="columnSelected" style="height: 24.72px;" disabled="true">
+                                <option id="processColumnText" readonly="readonly">Please select the file first</option>
+                            </select>
                         </td>
                         <td>
-                            <input type="text" name="columnSelected" id="columnSelected" value="Please first select the file" readonly="readonly"/>
-                        </td>
-                        <td>
-                            <input type="text" name="valueProvided" id="valueProvided" value="123.1.2.37" />
+                            <input type="text" name="valueProvided" id="valueProvided" placeholder="Enter the value" />
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <input type="submit" name="processFile" id="processFile" onClick="processFile()" class="btn btn-primary btn-md"/>
-            <div id="columnDetails" hidden></div>
+            <input type="submit" name="processFile" id="processFile" onClick="processFile()" class="btn btn-primary btn-md" disabled="true"/>
+            <div id="columnDetails" hidden="true"></div>
+            <div id="previousSelectedFile" hidden="true"></div>
             <hr>
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                     <tr id="columnData">
                     </tr>
                 </thead>
-                <tbody>
-                    <tr id="rowData">
-                    </tr>
+                <tbody id="rowData">
                 </tbody>
             </table>
         </div>
+        
         <!-- dependecy script -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="js/utility.js"></script>
