@@ -2,13 +2,13 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="author" content="TeleTech">		
+        <meta name="author" content="TeleTech">                   
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>TeleTech Dashboard</title>
     </head>
     <!-- Embedding Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+ 
     <body>
         <div class="row" >
             <div class="col-md-4">
@@ -36,10 +36,10 @@
                 <div class="col-md-2">Please select the file from list to process:
                     &nbsp <br/>
                     <div>Search you file:</div>
-                    <input type="search" name="fileSearch" id="searchFile" placeholder="Search you file"/>
+                    <!-- <input type="search" name="fileSearch" id="searchFile" placeholder="Search you file"/> -->
                     <input type="hidden" id="fileArray" name="fileArray" />
                     <div id="result" class="list-group"></div>
-                    <div>OR</div><br/>
+                   <!-- <div>OR</div><br/> -->
                     <div type="hidden" id="select" ></div>
                     <div style="width: 200px; overflow: auto;">
                     <select id="selectFile" name="selectFile" >
@@ -47,6 +47,7 @@
                         <option id="optionCreated" hidden="true"></option>
                     </select>
                     </div>
+                    <br/>
                 </div>
                 <div class="col-md-2"  align="right"><h1><span class="label label-default">Delete File</span></h1></div>
                 <div class="col-md-2">Please select the file from list to delete:<br/>
@@ -65,6 +66,7 @@
                 <thead>
                     <tr>
                         <th>File Selected</th>
+                        <th>Select the Sheet</th>
                         <th>Choose column</th>
                         <th>Enter the value of that column</th>
                     </tr>
@@ -72,8 +74,12 @@
                 <tbody>
                     <tr>
                         <td>
-                            <input type="text" name="fileSubmitted" id="fileSubmitted" value="Please select the file first" readonly="readonly"/>
+                            <input type="text" id="fileSubmitted" name="fileSubmitted" value="Please select the file first" readonly="readonly"/>
                         </td>
+                        <td>
+                            <select id="sheetName" name="sheetName" style="width: 140px; height: 24.72px;" disabled="true">
+                                <option id="select" >Select your sheet</option>
+                            </select>
                         <td style="overflow: auto">
                             <select name="columnSelected" id="columnSelected" style="height: 24.72px;" disabled="true">
                                 <option id="processColumnText" readonly="readonly">Please select the file first</option>
@@ -85,11 +91,11 @@
                     </tr>
                 </tbody>
             </table>
-            <input type="submit" name="processFile" id="processFile" onClick="processFile()" class="btn btn-primary btn-md" disabled="true"/>
+            <input type="submit" name="processFile" id="processFile" onClick="processFile()" class="btn btn-primary btn-md" value="Fetch" disabled="true"/>
             <div id="columnDetails" hidden="true"></div>
             <div id="previousSelectedFile" hidden="true"></div>
             <hr>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr id="columnData">
                     </tr>
@@ -98,8 +104,10 @@
                 </tbody>
             </table>
         </div>
-        
-        <!-- dependecy script -->
+        <br/><br/><br/><br/>
+        <div class="panel-footer" align="center">2017 &copy; Infosys Development Team</div>
+       
+        <!-- dependency script -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="js/utility.js"></script>
     </body>
